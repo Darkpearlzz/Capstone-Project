@@ -14,7 +14,7 @@ const Welcome = () => {
       <div className="flex flex-col items-center justify-center flex-grow">
         {/* Logo/Icon */}
         <div className="mb-6">
-           <i className="bi bi-patch-question text-black text-9xl"></i>
+          <i className="bi bi-patch-question text-black text-9xl"></i>
         </div>
 
         {/* App Title */}
@@ -35,12 +35,11 @@ const Welcome = () => {
           style={{
             backgroundColor: "#0C7D74",
           }}
-          onMouseEnter={(e) => (e.target.style.backgroundColor = "#085F57")} // darker teal
+          onMouseEnter={(e) => (e.target.style.backgroundColor = "#085F57")}
           onMouseLeave={(e) => (e.target.style.backgroundColor = "#0C7D74")}
         >
           Start Quiz
         </button>
-
       </div>
 
       {/* Global Footer */}

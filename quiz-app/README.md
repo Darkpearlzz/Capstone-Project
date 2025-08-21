@@ -46,13 +46,13 @@ Deployment: Vercel
 
 📂 Project Structure
 quiz-app/
-│── public/             # Static assets
+│── public/ # Static assets
 │── src/
-│   ├── components/     # Reusable components (Button, Timer, QuestionCard, etc.)
-│   ├── pages/          # SPA Pages (Welcome, Selection, Quiz, Result)
-│   ├── context/        # React Context API for global state
-│   ├── App.jsx         # Root component
-│   ├── main.jsx        # Entry point for Vite
+│ ├── components/ # Reusable components (Button, Timer, QuestionCard, etc.)
+│ ├── pages/ # SPA Pages (Welcome, Selection, Quiz, Result)
+│ ├── context/ # React Context API for global state
+│ ├── App.jsx # Root component
+│ ├── main.jsx # Entry point for Vite
 │── package.json
 │── tailwind.config.js
 │── vite.config.js
@@ -108,13 +108,13 @@ Open a Pull Request
 
 📅 Roadmap
 
- Add Leaderboard functionality 🏅
+Add Leaderboard functionality 🏅
 
- Add Mode 🌙
+Add Mode 🌙
 
- Integrate with Trivia API for dynamic questions 🌐
+Integrate with Trivia API for dynamic questions 🌐
 
- Add Animations & Transitions for smoother UX 🎨
+Add Animations & Transitions for smoother UX 🎨
 
 📜 License
 
@@ -128,6 +128,6 @@ Tailwind CSS
 
 Vite
 
-Open Trivia API 
+Open Trivia API
 
 ✨ The Quiz Corner – Where fun meets knowledge! ✨
