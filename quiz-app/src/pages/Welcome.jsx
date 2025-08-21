@@ -1,18 +1,22 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
 
 const Welcome = () => {
   const navigate = useNavigate();
 
   return (
     <div
-      className="flex flex-col items-center justify-between h-screen text-center"
+      className="flex flex-col justify-between h-screen text-center"
       style={{ backgroundColor: "#FFAE00" }}
     >
+      {/* Navbar */}
+      <Navbar />
+
       {/* Center Content */}
       <div className="flex flex-col items-center justify-center flex-grow">
-        {/* Logo/Icon */}
+        {/* Icon */}
         <div className="mb-6">
           <i className="bi bi-patch-question text-black text-9xl"></i>
         </div>
@@ -30,11 +34,8 @@ const Welcome = () => {
         {/* Start Quiz Button */}
         <button
           onClick={() => navigate("/selection")}
-          className="mt-6 px-6 py-3 text-lg rounded-full shadow-lg transition 
-                    text-black hover:text-white"
-          style={{
-            backgroundColor: "#0C7D74",
-          }}
+          className="mt-6 px-6 py-3 text-lg rounded-full shadow-lg transition text-black hover:text-white"
+          style={{ backgroundColor: "#0C7D74" }}
           onMouseEnter={(e) => (e.target.style.backgroundColor = "#085F57")}
           onMouseLeave={(e) => (e.target.style.backgroundColor = "#0C7D74")}
         >
@@ -42,7 +43,7 @@ const Welcome = () => {
         </button>
       </div>
 
-      {/* Global Footer */}
+      {/* Footer */}
       <Footer />
     </div>
   );

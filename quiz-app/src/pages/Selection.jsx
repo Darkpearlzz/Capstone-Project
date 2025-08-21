@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useCategories from "../hooks/useCategories";
 import { useQuiz } from "../contexts/QuizContext";
 import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
 
 const difficulties = [
   { value: "easy", label: "Easy" },
@@ -36,6 +37,9 @@ const Selection = () => {
       className="flex flex-col items-center justify-between min-h-screen text-center p-6"
       style={{ backgroundColor: "#FFAE00" }}
     >
+      {/* Logo */}
+      <Navbar />
+
       {/* Center Content */}
       <div className="flex flex-col items-center justify-center flex-grow w-full max-w-2xl">
         <h1 className="text-3xl md:text-4xl font-extrabold mb-10 text-black">
