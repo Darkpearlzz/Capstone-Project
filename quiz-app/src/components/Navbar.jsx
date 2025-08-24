@@ -1,13 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/logo.jpeg";
+import logo from "../assets/logo.jpg";
 
 const Navbar = () => {
   let navigate;
   try {
     navigate = useNavigate();
   } catch (err) {
-    // useNavigate throws if not inside a Router
     navigate = null;
   }
 
@@ -21,7 +20,7 @@ const Navbar = () => {
       <img
         src={logo}
         alt="App Logo"
-        className="h-12 w-12 rounded-full object-cover shadow-md cursor-pointer"
+        className="h-16 w-16 rounded-full object-cover shadow-md cursor-pointer"
         onClick={goHome}
       />
     </header>

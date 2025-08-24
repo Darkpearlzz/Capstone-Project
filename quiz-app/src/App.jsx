@@ -18,7 +18,6 @@ export default function App() {
   const [score, setScore] = useState(0);
   const [showResults, setShowResults] = useState(false);
 
-  // Fetch categories once on mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -156,20 +155,14 @@ export default function App() {
 
           {/* Welcome card (shown first) */}
           {!hasSeenWelcome && !loading && !error && (
-            <div
-              className="bg-[#FFAE00] rounded-2xl shadow-lg p-6"
-              style={{ maxHeight: 460 }}
-            >
+            <div>
               <Welcome onStart={() => setHasSeenWelcome(true)} />
             </div>
           )}
 
           {/* Selection screen (after welcome) */}
           {hasSeenWelcome && !isQuizStarted && !loading && !error && (
-            <div
-              className="bg-[#FFAE00] rounded-2xl shadow-lg p-6"
-              style={{ maxHeight: 640, overflow: "auto" }}
-            >
+            <div>
               <Selection
                 categories={categories}
                 selectedCategory={selectedCategory}
@@ -183,17 +176,14 @@ export default function App() {
 
           {/* Quiz screen */}
           {isQuizStarted && !showResults && questions.length > 0 && (
-            <div
-              className="bg-[#FFAE00] rounded-2xl shadow-lg p-6"
-              style={{ maxHeight: 640, overflow: "auto" }}
-            >
+            <div>
               <Quiz
                 question={questions[currentQuestionIndex]}
                 currentQuestionIndex={currentQuestionIndex}
                 totalQuestions={questions.length}
                 onAnswer={handleAnswer}
                 onTimeout={handleTimeout}
-                timePerQuestion={30}
+                timePerQuestion={15}
               />
             </div>
           )}

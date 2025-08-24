@@ -6,12 +6,11 @@ export default function Quiz({
   totalQuestions,
   onAnswer,
   onTimeout,
-  timePerQuestion = 30, // default 30 seconds
+  timePerQuestion = 15,
 }) {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [remaining, setRemaining] = useState(timePerQuestion);
 
-  // Reset selection + timer when question changes
   useEffect(() => {
     setSelectedAnswer(null);
     setRemaining(timePerQuestion);

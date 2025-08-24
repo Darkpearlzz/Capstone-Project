@@ -5,11 +5,11 @@ const Welcome = ({ onStart }) => {
     <div className="flex flex-col items-center justify-center">
       {/* Icon */}
       <div className="mb-4">
-        <i className="bi bi-patch-question text-black text-7xl"></i>
+        <i className="bi bi-patch-question text-black text-9xl"></i>
       </div>
 
       {/* App Title */}
-      <h1 className="text-3xl font-extrabold text-black text-center">
+      <h1 className="text-5xl font-extrabold text-black text-center">
         The Quiz Corner
       </h1>
 
