@@ -1,124 +1,67 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import useCategories from "../hooks/useCategories";
-import { useQuiz } from "../contexts/QuizContext";
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
+import React from "react";
 
-const difficulties = [
-  { value: "easy", label: "Easy" },
-  { value: "medium", label: "Medium" },
-  { value: "hard", label: "Hard" },
-];
-
-const Selection = () => {
-  const { categories, loading, error } = useCategories();
-  const { setSettings } = useQuiz();
-  const navigate = useNavigate();
-
-  const [category, setCategory] = useState("");
-  const [categoryName, setCategoryName] = useState("");
-  const [difficulty, setDifficulty] = useState("");
-
-  const handleNext = () => {
-    setSettings((prev) => ({
-      ...prev,
-      category,
-      categoryName,
-      difficulty,
-    }));
-    navigate("/quiz");
-  };
-
-  const isValid = category && difficulty;
+export default function Selection({
+  categories,
+  selectedCategory,
+  setSelectedCategory,
+  selectedDifficulty,
+  setSelectedDifficulty,
+  onStartQuiz,
+}) {
+  const buttonClass =
+    "w-full text-white font-bold py-3 rounded-xl shadow-md transition-colors duration-300 bg-[#0C7D74] hover:bg-[#085F57]";
 
   return (
-    <div
-      className="flex flex-col items-center justify-between min-h-screen text-center p-6"
-      style={{ backgroundColor: "#FFAE00" }}
-    >
-      {/* Logo */}
-      <Navbar />
-
-      {/* Center Content */}
-      <div className="flex flex-col items-center justify-center flex-grow w-full max-w-2xl">
-        <h1 className="text-3xl md:text-4xl font-extrabold mb-10 text-black">
-          Make a choice
-        </h1>
-
-        {/* Category */}
-        <div className="w-full mb-6">
-          <label
-            className="block text-lg mb-2 text-black text-left"
-            htmlFor="category"
-          >
-            Categories
-          </label>
-          {loading ? (
-            <div className="h-12 bg-gray-300 animate-pulse rounded-lg" />
-          ) : error ? (
-            <p className="text-red-700">Error loading categories</p>
-          ) : (
-            <select
-              id="category"
-              value={category}
-              onChange={(e) => {
-                const id = e.target.value;
-                setCategory(id);
-                const name = categories.find((c) => c.id == id)?.name || "";
-                setCategoryName(name);
-              }}
-              className="w-full p-3 rounded-lg bg-gray-200"
-            >
-              <option value="">-- Select category --</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-          )}
-        </div>
-
-        {/* Difficulty */}
-        <div className="w-full mb-6">
-          <label
-            className="block text-lg mb-2 text-black text-left"
-            htmlFor="difficulty"
-          >
-            Difficulty Level
-          </label>
-          <select
-            id="difficulty"
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value)}
-            className="w-full p-3 rounded-lg bg-gray-200"
-          >
-            <option value="">-- Select difficulty --</option>
-            {difficulties.map((d) => (
-              <option key={d.value} value={d.value}>
-                {d.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Next Button */}
-        <button
-          onClick={() => navigate("/quiz")}
-          className="mt-6 px-6 py-3 text-lg rounded-full shadow-lg transition text-black hover:text-white"
-          style={{ backgroundColor: "#0C7D74" }}
-          onMouseEnter={(e) => (e.target.style.backgroundColor = "#085F57")}
-          onMouseLeave={(e) => (e.target.style.backgroundColor = "#0C7D74")}
+    <div className="flex flex-col gap-6 text-gray-900">
+      <h1
+        className="text-4xl font-bold text-center mb-8"
+        style={{ color: "black" }}
+      >
+        Make a choice
+      </h1>
+      <div className="flex flex-col">
+        <label
+          htmlFor="category"
+          className="text-lg font-medium text-gray-900 mb-2"
         >
-          Next
-        </button>
+          Categories
+        </label>
+        <select
+          id="category"
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          className="p-3 border-none rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#0C7D74]"
+        >
+          <option value="">-- Choose Category --</option>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
       </div>
-
-      {/* Footer */}
-      <Footer />
+      <div className="flex flex-col">
+        <label
+          htmlFor="difficulty"
+          className="text-lg font-medium text-gray-900 mb-2"
+        >
+          Difficulty Level
+        </label>
+        <select
+          id="difficulty"
+          value={selectedDifficulty}
+          onChange={(e) => setSelectedDifficulty(e.target.value)}
+          className="p-3 border-none rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#0C7D74]"
+        >
+          <option value="">-- Choose Difficulty --</option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+      <button onClick={onStartQuiz} className={buttonClass}>
+        Next
+      </button>
     </div>
   );
-};
-
-export default Selection;
+}

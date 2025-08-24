@@ -2,7 +2,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="py-4 flex justify-center space-x-6">
+    <footer className="fixed bottom-4 right-6 flex space-x-6">
       <a
         href="https://x.com/darkpearlzz"
         target="_blank"

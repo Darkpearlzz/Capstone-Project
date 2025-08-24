@@ -1,50 +1,32 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
 
-const Welcome = () => {
-  const navigate = useNavigate();
-
+const Welcome = ({ onStart }) => {
   return (
-    <div
-      className="flex flex-col justify-between h-screen text-center"
-      style={{ backgroundColor: "#FFAE00" }}
-    >
-      {/* Navbar */}
-      <Navbar />
+    <div className="flex flex-col items-center justify-center">
+      {/* Icon */}
+      <div className="mb-4">
+        <i className="bi bi-patch-question text-black text-7xl"></i>
+      </div>
 
-      {/* Center Content */}
-      <div className="flex flex-col items-center justify-center flex-grow">
-        {/* Icon */}
-        <div className="mb-6">
-          <i className="bi bi-patch-question text-black text-9xl"></i>
-        </div>
+      {/* App Title */}
+      <h1 className="text-3xl font-extrabold text-black text-center">
+        The Quiz Corner
+      </h1>
 
-        {/* App Title */}
-        <h1 className="text-4xl md:text-5xl font-extrabold text-black">
-          The Quiz Corner
-        </h1>
+      {/* Subtitle */}
+      <p className="text-lg mt-2 text-black font-medium text-center">
+        Where fun meets knowledge
+      </p>
 
-        {/* Subtitle */}
-        <p className="text-lg md:text-xl mt-2 text-black font-medium">
-          Where fun meets knowledge
-        </p>
-
-        {/* Start Quiz Button */}
+      {/* Start Quiz Button */}
+      <div className="mt-6">
         <button
-          onClick={() => navigate("/selection")}
-          className="mt-6 px-6 py-3 text-lg rounded-full shadow-lg transition text-black hover:text-white"
-          style={{ backgroundColor: "#0C7D74" }}
-          onMouseEnter={(e) => (e.target.style.backgroundColor = "#085F57")}
-          onMouseLeave={(e) => (e.target.style.backgroundColor = "#0C7D74")}
+          onClick={() => onStart && onStart()}
+          className="px-6 py-3 text-lg rounded-full shadow-lg transition text-black hover:text-white bg-[#0C7D74] hover:bg-[#085F57]"
         >
           Start Quiz
         </button>
       </div>
-
-      {/* Footer */}
-      <Footer />
     </div>
   );
 };
