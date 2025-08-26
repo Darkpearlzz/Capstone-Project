@@ -35,8 +35,10 @@ export default function App() {
       }
     };
 
-    fetchCategories();
-  }, []);
+    if (hasSeenWelcome) {
+      fetchCategories();
+    }
+  }, [hasSeenWelcome]);
 
   const decodeHtml = (html) => {
     const txt = document.createElement("textarea");
