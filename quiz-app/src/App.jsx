@@ -107,7 +107,7 @@ export default function App() {
     const nextIndex = currentQuestionIndex + 1;
     if (nextIndex >= questions.length) {
       setShowResults(true);
-      setIsQuizStarted(false); // stop showing quiz
+      setIsQuizStarted(false);
     } else {
       setCurrentQuestionIndex(nextIndex);
     }
