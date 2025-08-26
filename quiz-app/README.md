@@ -24,12 +24,12 @@ Deployed seamlessly on Vercel, The Quiz Corner provides a fast, mobile-friendly,
 Welcome Page 🎉
 
 Quiz Selection Page 📝
+✔️ Dynamic quiz flow (questions loaded based on user choices)
 
 Quiz Page with Timer ⏳
+✔️ 15 seconds per question timer
 
 Result Page 🏆
-✔️ Dynamic quiz flow (questions loaded based on user choices)
-✔️ 30 seconds per question timer
 ✔️ Scoring system with instant results
 ✔️ Option to restart or take another quiz
 ✔️ Deployed to Vercel for instant global availability
@@ -40,19 +40,19 @@ Frontend: React + Vite
 
 Styling: Tailwind CSS
 
-State Management: React Hooks (useState, useEffect, useContext)
+State Management: Local component state (useState, useEffect, useContext)
 
 Deployment: Vercel
 
 📂 Project Structure
 quiz-app/
-│── public/ # Static assets
+│── public/ 
 │── src/
-│ ├── components/ # Reusable components (Button, Timer, QuestionCard, etc.)
-│ ├── pages/ # SPA Pages (Welcome, Selection, Quiz, Result)
-│ ├── context/ # React Context API for global state
-│ ├── App.jsx # Root component
-│ ├── main.jsx # Entry point for Vite
+│ ├── components/ Navbar, Footer, ErrorBoundary
+│ ├── pages/ Welcome, Selection, Quiz, Result
+│ ├── assets/ logo
+│ ├── App.jsx
+│ ├── main.jsx 
 │── package.json
 │── tailwind.config.js
 │── vite.config.js
@@ -109,8 +109,6 @@ Open a Pull Request
 📅 Roadmap
 
 Add Leaderboard functionality 🏅
-
-Add Mode 🌙
 
 Integrate with Trivia API for dynamic questions 🌐
 
