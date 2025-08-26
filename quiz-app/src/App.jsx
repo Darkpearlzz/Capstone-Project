@@ -4,6 +4,7 @@ import Footer from "./components/Footer";
 import Welcome from "./pages/Welcome";
 import Selection from "./pages/Selection";
 import Quiz from "./pages/Quiz";
+import Results from "./pages/Results";
 
 export default function App() {
   const [hasSeenWelcome, setHasSeenWelcome] = useState(false);
@@ -36,6 +37,21 @@ export default function App() {
 
     fetchCategories();
   }, []);
+
+  const decodeHtml = (html) => {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  };
+
+  const shuffleArray = (arr) => {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  };
 
   const handleStartQuiz = async () => {
     if (!selectedCategory || !selectedDifficulty) {
@@ -82,21 +98,6 @@ export default function App() {
     }
   };
 
-  const decodeHtml = (html) => {
-    const txt = document.createElement("textarea");
-    txt.innerHTML = html;
-    return txt.value;
-  };
-
-  const shuffleArray = (arr) => {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  };
-
   const handleAnswer = (answer) => {
     const current = questions[currentQuestionIndex];
     if (answer && answer === current.correctAnswer) {
@@ -106,6 +107,7 @@ export default function App() {
     const nextIndex = currentQuestionIndex + 1;
     if (nextIndex >= questions.length) {
       setShowResults(true);
+      setIsQuizStarted(false); // stop showing quiz
     } else {
       setCurrentQuestionIndex(nextIndex);
     }
@@ -115,6 +117,7 @@ export default function App() {
     const nextIndex = currentQuestionIndex + 1;
     if (nextIndex >= questions.length) {
       setShowResults(true);
+      setIsQuizStarted(false);
     } else {
       setCurrentQuestionIndex(nextIndex);
     }
@@ -153,7 +156,7 @@ export default function App() {
             </div>
           )}
 
-          {/* Welcome card (shown first) */}
+          {/* Welcome screen (shown first) */}
           {!hasSeenWelcome && !loading && !error && (
             <div>
               <Welcome onStart={() => setHasSeenWelcome(true)} />
@@ -161,18 +164,22 @@ export default function App() {
           )}
 
           {/* Selection screen (after welcome) */}
-          {hasSeenWelcome && !isQuizStarted && !loading && !error && (
-            <div>
-              <Selection
-                categories={categories}
-                selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-                selectedDifficulty={selectedDifficulty}
-                setSelectedDifficulty={setSelectedDifficulty}
-                onStartQuiz={handleStartQuiz}
-              />
-            </div>
-          )}
+          {hasSeenWelcome &&
+            !isQuizStarted &&
+            !loading &&
+            !error &&
+            !showResults && (
+              <div>
+                <Selection
+                  categories={categories}
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                  selectedDifficulty={selectedDifficulty}
+                  setSelectedDifficulty={setSelectedDifficulty}
+                  onStartQuiz={handleStartQuiz}
+                />
+              </div>
+            )}
 
           {/* Quiz screen */}
           {isQuizStarted && !showResults && questions.length > 0 && (
@@ -184,6 +191,29 @@ export default function App() {
                 onAnswer={handleAnswer}
                 onTimeout={handleTimeout}
                 timePerQuestion={15}
+              />
+            </div>
+          )}
+
+          {/* Results screen */}
+          {showResults && (
+            <div>
+              <Results
+                score={score}
+                total={questions.length}
+                onRetry={() => {
+                  setScore(0);
+                  setCurrentQuestionIndex(0);
+                  setShowResults(false);
+                  setIsQuizStarted(true);
+                }}
+                onChooseNew={() => {
+                  setIsQuizStarted(false);
+                  setShowResults(false);
+                  setQuestions([]);
+                  setCurrentQuestionIndex(0);
+                  setScore(0);
+                }}
               />
             </div>
           )}
