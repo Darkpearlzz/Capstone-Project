@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 export default function Quiz({
   question,
@@ -10,31 +10,111 @@ export default function Quiz({
 }) {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [remaining, setRemaining] = useState(timePerQuestion);
+  const [showFeedback, setShowFeedback] = useState(false);
+
+  const timerRef = useRef(null);
+  const feedbackTimeoutRef = useRef(null);
+  const FEEDBACK_DELAY = 1500; // ms
+
+  // helper to check correct answer
+  const isCorrect = (answer) => answer === question.correctAnswer;
 
   useEffect(() => {
+    // reset state when question changes
     setSelectedAnswer(null);
     setRemaining(timePerQuestion);
+    setShowFeedback(false);
 
-    const id = setInterval(() => {
+    // clear any existing timers
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    if (feedbackTimeoutRef.current) {
+      clearTimeout(feedbackTimeoutRef.current);
+      feedbackTimeoutRef.current = null;
+    }
+
+    // start countdown
+    timerRef.current = setInterval(() => {
       setRemaining((r) => {
         if (r <= 1) {
-          clearInterval(id);
-          if (typeof onTimeout === "function") onTimeout();
+          // time's up: stop timer, reveal correct answer, then call onTimeout after delay
+          if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+          }
+          setShowFeedback(true);
+          feedbackTimeoutRef.current = setTimeout(() => {
+            if (typeof onTimeout === "function") onTimeout();
+            feedbackTimeoutRef.current = null;
+          }, FEEDBACK_DELAY);
           return 0;
         }
         return r - 1;
       });
     }, 1000);
 
-    return () => clearInterval(id);
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      if (feedbackTimeoutRef.current) {
+        clearTimeout(feedbackTimeoutRef.current);
+        feedbackTimeoutRef.current = null;
+      }
+    };
   }, [question, timePerQuestion, onTimeout]);
+
+  const handleSubmit = () => {
+    if (!selectedAnswer || showFeedback) return;
+
+    // stop timer
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+
+    // show feedback (green/red)
+    setShowFeedback(true);
+
+    // after delay, notify parent of the chosen answer (parent handles scoring + advance)
+    feedbackTimeoutRef.current = setTimeout(() => {
+      if (typeof onAnswer === "function") onAnswer(selectedAnswer);
+      feedbackTimeoutRef.current = null;
+    }, FEEDBACK_DELAY);
+  };
 
   const buttonClass =
     "w-full text-white font-bold py-3 rounded-xl shadow-md transition-colors duration-300 bg-[#0C7D74] hover:bg-[#085F57]";
   const answerButtonBase =
-    "w-full bg-white font-medium py-3 rounded-xl shadow-sm transition-colors duration-300 border";
-  const answerButtonSelected = "border-[#0C7D74] bg-[#E6F4F3]";
-  const answerButtonUnselected = "border-transparent hover:bg-gray-100";
+    "w-full font-medium py-3 rounded-xl shadow-sm transition-colors duration-300 border flex items-center justify-between px-4";
+  const defaultUnselected =
+    "bg-white text-gray-900 border-transparent hover:bg-gray-100";
+  const selectedNeutral = "border-[#0C7D74] bg-[#E6F4F3] text-gray-900";
+  const correctClass = "border-green-600 bg-green-100 text-green-800";
+  const wrongClass = "border-red-600 bg-red-100 text-red-800";
+  const dimmed = "opacity-70";
+
+  const getAnswerClass = (answer) => {
+    if (!showFeedback) {
+      // before submission: visually highlight selected one
+      return `${answerButtonBase} ${
+        selectedAnswer === answer ? selectedNeutral : defaultUnselected
+      }`;
+    }
+
+    // after submission/timeout: reveal correct & wrong
+    if (isCorrect(answer)) {
+      return `${answerButtonBase} ${correctClass}`;
+    }
+    if (answer === selectedAnswer && !isCorrect(answer)) {
+      return `${answerButtonBase} ${wrongClass}`;
+    }
+    // other answers - dim
+    return `${answerButtonBase} ${defaultUnselected} ${dimmed}`;
+  };
 
   return (
     <div className="flex flex-col gap-6 text-gray-900">
@@ -56,19 +136,29 @@ export default function Quiz({
       </div>
 
       <div className="grid grid-cols-1 gap-4">
-        {question.answers.map((answer, index) => {
-          const isSelected = selectedAnswer === answer;
+        {(question.answers || []).map((answer, index) => {
+          const chosen = selectedAnswer === answer;
+          const disabled = showFeedback; // disable selection when feedback showing
           return (
             <button
               type="button"
               key={index}
-              onClick={() => setSelectedAnswer(answer)}
-              className={[
-                answerButtonBase,
-                isSelected ? answerButtonSelected : answerButtonUnselected,
-              ].join(" ")}
+              onClick={() => {
+                if (showFeedback) return;
+                setSelectedAnswer(answer);
+              }}
+              disabled={disabled}
+              className={getAnswerClass(answer)}
             >
-              {answer}
+              <span>{answer}</span>
+
+              {/* show check or cross during feedback */}
+              {showFeedback && isCorrect(answer) && (
+                <span className="ml-2 font-bold">✓</span>
+              )}
+              {showFeedback && chosen && !isCorrect(answer) && (
+                <span className="ml-2 font-bold">✕</span>
+              )}
             </button>
           );
         })}
@@ -79,12 +169,13 @@ export default function Quiz({
         <span className="font-bold">Difficulty:</span> {question.difficulty}
       </div>
 
-      {/* Submit only when an answer is selected; no skipping */}
       <button
         type="button"
-        disabled={!selectedAnswer}
-        onClick={() => onAnswer(selectedAnswer)}
-        className={`${buttonClass} disabled:opacity-50 disabled:cursor-not-allowed`}
+        disabled={!selectedAnswer || showFeedback}
+        onClick={handleSubmit}
+        className={`${buttonClass} ${
+          !selectedAnswer || showFeedback ? "opacity-50 cursor-not-allowed" : ""
+        }`}
       >
         Submit
       </button>
