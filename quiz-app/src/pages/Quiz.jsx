@@ -14,18 +14,15 @@ export default function Quiz({
 
   const timerRef = useRef(null);
   const feedbackTimeoutRef = useRef(null);
-  const FEEDBACK_DELAY = 1500; // ms
+  const FEEDBACK_DELAY = 1500;
 
-  // helper to check correct answer
   const isCorrect = (answer) => answer === question.correctAnswer;
 
   useEffect(() => {
-    // reset state when question changes
     setSelectedAnswer(null);
     setRemaining(timePerQuestion);
     setShowFeedback(false);
 
-    // clear any existing timers
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
@@ -35,11 +32,9 @@ export default function Quiz({
       feedbackTimeoutRef.current = null;
     }
 
-    // start countdown
     timerRef.current = setInterval(() => {
       setRemaining((r) => {
         if (r <= 1) {
-          // time's up: stop timer, reveal correct answer, then call onTimeout after delay
           if (timerRef.current) {
             clearInterval(timerRef.current);
             timerRef.current = null;
@@ -70,16 +65,13 @@ export default function Quiz({
   const handleSubmit = () => {
     if (!selectedAnswer || showFeedback) return;
 
-    // stop timer
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
 
-    // show feedback (green/red)
     setShowFeedback(true);
 
-    // after delay, notify parent of the chosen answer (parent handles scoring + advance)
     feedbackTimeoutRef.current = setTimeout(() => {
       if (typeof onAnswer === "function") onAnswer(selectedAnswer);
       feedbackTimeoutRef.current = null;
@@ -99,20 +91,18 @@ export default function Quiz({
 
   const getAnswerClass = (answer) => {
     if (!showFeedback) {
-      // before submission: visually highlight selected one
       return `${answerButtonBase} ${
         selectedAnswer === answer ? selectedNeutral : defaultUnselected
       }`;
     }
 
-    // after submission/timeout: reveal correct & wrong
     if (isCorrect(answer)) {
       return `${answerButtonBase} ${correctClass}`;
     }
     if (answer === selectedAnswer && !isCorrect(answer)) {
       return `${answerButtonBase} ${wrongClass}`;
     }
-    // other answers - dim
+
     return `${answerButtonBase} ${defaultUnselected} ${dimmed}`;
   };
 
@@ -138,7 +128,7 @@ export default function Quiz({
       <div className="grid grid-cols-1 gap-4">
         {(question.answers || []).map((answer, index) => {
           const chosen = selectedAnswer === answer;
-          const disabled = showFeedback; // disable selection when feedback showing
+          const disabled = showFeedback;
           return (
             <button
               type="button"
